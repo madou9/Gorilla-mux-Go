@@ -3,27 +3,16 @@ package repository
 import (
 	"context"
 	"log"
-	"os"
 	"projectx/model"
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
 func newMongoClient() *mongo.Client {
-	// Load environment variables from .env
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-		mongoURI := os.Getenv("MONGO_URI")
-	if mongoURI == "" {
-		log.Fatal("MONGO_URI is not set in .env")
-	}
 	mongoTestClient, err := mongo.Connect(context.Background(),
 	options.Client().ApplyURI(mongoURI))
 
@@ -63,7 +52,7 @@ func TestMongoOperation(t *testing.T) {
 		emp := model.Employee{
 			Name: 		"Tony Stark",
 			Department: "Physics",
-			Employee: emp1,
+			EmployeeID: emp1,
 		}	
 
 		result, err := empRepo.InsertEmployee(&emp)
@@ -100,7 +89,7 @@ func TestMongoOperation(t *testing.T) {
 		emp := model.Employee{
 			Name: 		"Tony Stark vs Iron Man",
 			Department: "Physics",
-			Employee: emp1,
+			EmployeeID: emp1,
 		}	
 
 		result, err := empRepo.UpdateEmployeeID(emp1, &emp)
@@ -110,12 +99,34 @@ func TestMongoOperation(t *testing.T) {
 		}
 		t.Log("Insert 1 successful", result)
 	})
-	t.Run("Get Employee 1 after update", func(t *testing.T) {
-		result, err := empRepo.FindEmployeeByID(emp1)
+
+	// delete Employee 1 data
+	t.Run("Delete Employee 1", func(t *testing.T) {
+		result, err := empRepo.DeleteEmployeeID(emp1)
+
+		if err != nil {
+			log.Fatal("delete operation failed", err)
+		}
+		t.Log("delete count", result)
+	})
+
+	// Get all Employee Data after delete
+	t.Run("Get Employee After delete", func(t *testing.T) {
+		results, err := empRepo.FindAllEmployee()
 
 		if err != nil {
 			log.Fatal("get operation failed", err)
 		}
-		t.Log("emp 1", result.Name)
+		t.Log("employees", results)
+	})
+
+	// Delete All Employee
+
+	t.Run("Delete Employee For Cleanup", func(t *testing.T) {
+		result, err := empRepo.DeleteAllEmployee()
+		if err != nil {
+			log.Fatal("delete operation failed", err)
+		}
+		t.Log("delete count", result)
 	})
 }
