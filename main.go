@@ -50,7 +50,7 @@ func main() {
 
 	r.HandleFunc("/health", healthHandler).Methods(http.MethodGet)
 	r.HandleFunc("/employee", empService.CreateEmployee).Methods(http.MethodPost)
-	r.HandleFunc("/employee/{id}", empService.GetEmployeeByID).Methods(http.MethodPut)
+	r.HandleFunc("/employee/{id}", empService.GetEmployeeByID).Methods(http.MethodGet)
 	r.HandleFunc("/employee", empService.GetAllEmployee).Methods(http.MethodGet)
 	r.HandleFunc("/employee/{id}", empService.DeleteEmployeeByID).Methods(http.MethodDelete)
 	r.HandleFunc("/employee", empService.DeleteAllEmployee).Methods(http.MethodDelete)
