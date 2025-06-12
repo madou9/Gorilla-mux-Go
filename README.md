@@ -25,16 +25,3 @@ A simple RESTful API built in Go using **Gorilla Mux** and **MongoDB**. It suppo
 - Environment Config: **joho/godotenv**
 
 ---
-
-## Project Structure
-
-projectx/
-├── main.go
-├── model/
-│ └── employee.go
-├── repository/
-│ └── employee.go
-├── usecase/
-│ └── employee.go
-├── .env
-└── go.mod
